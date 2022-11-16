@@ -32,6 +32,17 @@ class InstructorProfile(AbstractBaseUser, models.Model):
     phone_number = models.IntegerField()
     is_staff = models.BooleanField(default=True)
 
+    MORNING = 'AM'
+    AFTERNOON = 'PM'
+    SCHEDULE_CHOICES = [
+        (MORNING, '07:00-15:00'),
+        (AFTERNOON, '15:00-23:00')
+    ]
+    SCHEDULE = models.CharField(
+        max_length=2,
+        choices=SCHEDULE_CHOICES
+    )
+
     objects = UserMemberManager()
 
     USERNAME_FIELD = 'email'
@@ -49,6 +60,7 @@ class MemberProfile(AbstractBaseUser, models.Model):
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     is_staff = models.BooleanField(default=False)
+    instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
 
     ONEMONTH = '1M'
     THREEMONTH = '3M'

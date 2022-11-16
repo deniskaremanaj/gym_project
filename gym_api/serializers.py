@@ -10,7 +10,7 @@ class InstructorProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.InstructorProfile
-        fields = ('id', 'name', 'email', 'password', 'phone_number')
+        fields = ('id', 'name', 'email', 'password', 'phone_number', 'schedule')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -23,7 +23,8 @@ class InstructorProfileSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             email=validated_data['email'],
             password=validated_data['password'],
-            phone_number=validated_data['phone_number']
+            phone_number=validated_data['phone_number'],
+            schedule=validated_data['schedule']
         )
         return user
 
