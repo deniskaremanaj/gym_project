@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework import viewsets
 from gym_api import serializers
 from gym_api import models
-
 from rest_framework.authentication import TokenAuthentication
 from gym_api import permissions
 from rest_framework import filters
@@ -17,7 +16,14 @@ class WelcomeApiView(APIView):
 
     def get(self, request):
 
-        return Response({'http_method': 'GET'})
+        an_apiview = [
+            'Uses HTTP methods as functions (get, post, patch, put, delete)',
+            'Is similar to a traditional Django View',
+            'Gives you the most control over your logic',
+            'Is mapped manually to URLs',
+        ]
+
+        return Response({'message': 'Welcome!', 'an_apiview': an_apiview})
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -45,35 +51,22 @@ class WelcomeApiView(APIView):
         return Response({'method': 'DELETE'})
 
 
-class WelcomeViewSet(viewsets.ViewSet):
-
-    def create(self, request):
-
-        return Response({'http_method': 'POST'})
-
-    def retrieve(self, request, pk=None):
-
-        return Response({'http_method': 'GET'})
-
-    def update(self, request, pk=None):
-
-        return Response({'http_method': 'PUT'})
-
-    def partial_update(self, request, pk=None):
-
-        return Response({'http_method': 'PATCH'})
-
-    def destroy(self, request, pk=None):
-
-        return Response({'http_method': 'DELETE'})
-
-
-class UserProfileViewSet(viewsets.ModelViewSet):
-    """Handle creating, creating and updating profiles"""
-    serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all()
+class UserMemberViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MemberProfileSerializer
+    queryset = models.MemberProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
+
+class UserInstructorViewSet(viewsets.ModelViewSet):
+    queryset = models.InstructorProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
+
+
+class UserLoginApiView(ObtainAuthToken):
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

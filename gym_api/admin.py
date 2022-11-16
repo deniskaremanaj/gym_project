@@ -1,3 +1,5 @@
 from django.contrib import admin
+from gym_api import models
 
-# Register your models here.
+admin.site.register(models.MemberProfile)
+admin.site.register(models.InstructorProfile)

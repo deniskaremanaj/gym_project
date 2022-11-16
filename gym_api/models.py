@@ -26,11 +26,26 @@ class UserMemberManager(BaseUserManager):
         return user
 
 
-class UserProfile(AbstractBaseUser):
+class MemberProfile(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
     is_staff = models.BooleanField(default=False)
+
+    objects = UserMemberManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
+
+    def get_full_name(self):
+        return self.name
+
+
+class InstructorProfile(AbstractBaseUser):
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    phone_number = models.IntegerField()
+    is_staff = models.BooleanField(default=True)
 
     objects = UserMemberManager()
 

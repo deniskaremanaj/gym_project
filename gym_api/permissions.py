@@ -7,4 +7,4 @@ class UpdateOwnProfile(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.id == request.user.id
+        return obj.id == request.user.id or request.user.is_superuser
