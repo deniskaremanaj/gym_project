@@ -26,22 +26,7 @@ class UserMemberManager(BaseUserManager):
         return user
 
 
-class MemberProfile(AbstractBaseUser):
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
-    is_staff = models.BooleanField(default=False)
-
-    objects = UserMemberManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
-
-    def get_full_name(self):
-        return self.name
-
-
-class InstructorProfile(AbstractBaseUser):
+class InstructorProfile(AbstractBaseUser, models.Model):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
@@ -57,3 +42,50 @@ class InstructorProfile(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+class MemberProfile(AbstractBaseUser, models.Model):
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    phone_number = models.IntegerField()
+    is_staff = models.BooleanField(default=False)
+
+    ONEMONTH = '1M'
+    THREEMONTH = '3M'
+    SIXMONTH = '6M'
+    UNLIMITED = 'UL'
+    SUBSCRIPTIONS_CHOICES = [
+        (ONEMONTH, 'One month'),
+        (THREEMONTH, 'Six month'),
+        (SIXMONTH, 'One year'),
+        (UNLIMITED, 'Unlimited'),
+    ]
+    SUBSCRIPTION = models.CharField(
+        max_length=2,
+        choices=SUBSCRIPTIONS_CHOICES,
+        default=UNLIMITED,
+    )
+
+    LOSINGWEIGHT = 'LW'
+    GAINWEIGHT = 'GW'
+    BODYBUILDER = 'BD'
+    ATHLETICISM = 'AT'
+    SERVICES_CHOICES = [
+        (LOSINGWEIGHT, 'Losing weight'),
+        (GAINWEIGHT, 'Gain weight'),
+        (BODYBUILDER, 'Bodybuilder'),
+        (ATHLETICISM, 'Athleticism'),
+    ]
+    SERVICES = models.CharField(
+        max_length=2,
+        choices=SERVICES_CHOICES,
+        default=LOSINGWEIGHT
+    )
+
+    objects = UserMemberManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
+
+    def get_full_name(self):
+        return self.name

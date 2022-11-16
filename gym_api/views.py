@@ -51,17 +51,17 @@ class WelcomeApiView(APIView):
         return Response({'method': 'DELETE'})
 
 
-class UserMemberViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.MemberProfileSerializer
-    queryset = models.MemberProfile.objects.all()
+class UserInstructorViewSet(viewsets.ModelViewSet):
+    queryset = models.InstructorProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
 
-class UserInstructorViewSet(viewsets.ModelViewSet):
-    queryset = models.InstructorProfile.objects.all()
+class UserMemberViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MemberProfileSerializer
+    queryset = models.MemberProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
