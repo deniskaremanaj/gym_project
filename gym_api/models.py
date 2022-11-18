@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 
 class UserMemberManager(BaseUserManager):
@@ -55,7 +56,7 @@ class InstructorProfile(AbstractBaseUser, models.Model):
         return self.email
 
 
-class MemberProfile(AbstractBaseUser, models.Model):
+class MemberProfile(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
@@ -101,3 +102,17 @@ class MemberProfile(AbstractBaseUser, models.Model):
 
     def get_full_name(self):
         return self.name
+
+
+class UserFeedItem(models.Model):
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.status_text
+
+
