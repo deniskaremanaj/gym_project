@@ -69,7 +69,7 @@ class MemberProfileViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'email',)
 
 
-class MemberLoginApiView(ObtainAuthToken):
+class UserLoginApiView(ObtainAuthToken):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
@@ -81,3 +81,17 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user_profile=self.request.user)
+
+
+class PlanViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.PlanSerializer
+    queryset = models.Plan.objects.all()
+    permission_classes = (IsAuthenticated, permissions.UpdateOwnPlan)
+
+
+class PlanItemsViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.PlanItemsSerializer
+    queryset = models.PlanItems.objects.all()
+    permission_classes = (IsAuthenticated, permissions.UpdateOwnPlan)

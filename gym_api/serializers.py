@@ -59,3 +59,15 @@ class InstructorFeedItemSerializer(serializers.ModelSerializer):
         model = models.UserFeedItem
         fields = ('id', 'user_profile', 'status_text', 'created_on')
         extra_kwargs = {'user_profile': {'read_only': True}}
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Plan
+        fields = ('id', 'member', 'instructor', 'starting_day', 'ending_day', 'goal')
+
+
+class PlanItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PlanItems
+        fields = ('id', 'plan', 'exercise', 'day', 'repeat', 'description')

@@ -116,3 +116,20 @@ class UserFeedItem(models.Model):
         return self.status_text
 
 
+class Plan(models.Model):
+    member = models.ForeignKey('gym_api.MemberProfile', on_delete=models.CASCADE)
+    instructor = models.ForeignKey('gym_api.InstructorProfile', on_delete=models.CASCADE)
+    starting_day = models.DateField(auto_now_add=False)
+    ending_day = models.DateField(auto_now_add=False)
+    goal = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.member.name} {self.goal}'
+
+
+class PlanItems(models.Model):
+    plan = models.ForeignKey('gym_api.Plan', on_delete=models.CASCADE)
+    exercise = models.CharField(max_length=100)
+    day = models.DateField()
+    repeat = models.IntegerField()
+    description = models.CharField(max_length=255)
