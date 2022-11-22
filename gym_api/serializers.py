@@ -33,7 +33,7 @@ class MemberProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.MemberProfile
-        fields = ('id', 'email', 'name', 'password', 'phone_number', 'subscription', 'services')
+        fields = ('id', 'email', 'name', 'password', 'phone_number', 'instructor', 'subscriptions', 'services', 'schedule')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -47,13 +47,15 @@ class MemberProfileSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             password=validated_data['password'],
             phone_number=validated_data['phone_number'],
-            subscription=validated_data['subscription'],
-            services=validated_data['services']
+            instructor=validated_data['instructor'],
+            subscriptions=validated_data['subscriptions'],
+            services=validated_data['services'],
+            schedule=validated_data['schedule'],
         )
         return user
 
 
-class InstructorFeedItemSerializer(serializers.ModelSerializer):
+class UserFeedItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserFeedItem

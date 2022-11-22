@@ -17,14 +17,11 @@ class WelcomeApiView(APIView):
 
     def get(self, request):
 
-        an_apiview = [
-            'Uses HTTP methods as functions (get, post, patch, put, delete)',
-            'Is similar to a traditional Django View',
-            'Gives you the most control over your logic',
-            'Is mapped manually to URLs',
+        text = [
+            '"A list of gym subscriptions"',
         ]
 
-        return Response({'message': 'Welcome!', 'an_apiview': an_apiview})
+        return Response({'message': 'Welcome!', 'text': text})
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -53,6 +50,7 @@ class WelcomeApiView(APIView):
 
 
 class InstructorProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.InstructorProfileSerializer
     queryset = models.InstructorProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
@@ -68,6 +66,12 @@ class MemberProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
+    # def perform_update(self, serializer):
+    #     item = serializer.validated_data
+    #     instructor = item.get('instructor')
+    #     instructor.save()
+    #     serializer.save(schedule=instructor.schedule)
+
 
 class UserLoginApiView(ObtainAuthToken):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
@@ -75,7 +79,7 @@ class UserLoginApiView(ObtainAuthToken):
 
 class UserProfileFeedViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.InstructorFeedItemSerializer
+    serializer_class = serializers.UserFeedItemSerializer
     queryset = models.UserFeedItem.objects.all()
     permission_classes = (permissions.UpdateOwnStatus, IsAuthenticated)
 

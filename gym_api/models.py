@@ -4,7 +4,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 
 
-class UserMemberManager(BaseUserManager):
+class UserProfileManager(BaseUserManager):
     def create_user(self, email, name, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -27,7 +27,7 @@ class UserMemberManager(BaseUserManager):
         return user
 
 
-class InstructorProfile(AbstractBaseUser, models.Model):
+class InstructorProfile(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     phone_number = models.IntegerField()
@@ -39,12 +39,12 @@ class InstructorProfile(AbstractBaseUser, models.Model):
         (MORNING, '07:00-15:00'),
         (AFTERNOON, '15:00-23:00')
     ]
-    SCHEDULE = models.CharField(
+    schedule = models.CharField(
         max_length=2,
         choices=SCHEDULE_CHOICES
     )
 
-    objects = UserMemberManager()
+    objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
@@ -73,10 +73,9 @@ class MemberProfile(AbstractBaseUser):
         (SIXMONTH, 'One year'),
         (UNLIMITED, 'Unlimited'),
     ]
-    SUBSCRIPTION = models.CharField(
+    subscriptions = models.CharField(
         max_length=2,
         choices=SUBSCRIPTIONS_CHOICES,
-        default=UNLIMITED,
     )
 
     LOSINGWEIGHT = 'LW'
@@ -89,13 +88,23 @@ class MemberProfile(AbstractBaseUser):
         (BODYBUILDER, 'Bodybuilder'),
         (ATHLETICISM, 'Athleticism'),
     ]
-    SERVICES = models.CharField(
+    services = models.CharField(
         max_length=2,
         choices=SERVICES_CHOICES,
-        default=LOSINGWEIGHT
     )
 
-    objects = UserMemberManager()
+    MORNING = 'AM'
+    AFTERNOON = 'PM'
+    SCHEDULE_CHOICES = [
+        (MORNING, '07:00-15:00'),
+        (AFTERNOON, '15:00-23:00')
+    ]
+    schedule = models.CharField(
+        max_length=2,
+        choices=SCHEDULE_CHOICES
+    )
+
+    objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
@@ -105,10 +114,7 @@ class MemberProfile(AbstractBaseUser):
 
 
 class UserFeedItem(models.Model):
-    user_profile = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user_profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status_text = models.CharField(max_length=255)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -133,3 +139,6 @@ class PlanItems(models.Model):
     day = models.DateField()
     repeat = models.IntegerField()
     description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.plan}'
